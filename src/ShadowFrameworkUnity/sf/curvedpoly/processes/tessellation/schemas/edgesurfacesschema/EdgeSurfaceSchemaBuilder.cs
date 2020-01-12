@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace MLab.ShadowFramework.Interpolation
+{
+    public class SFEdgeSurfaceSchemaBuilder
+    {
+        public const int EDGE_SURFACE_SCHEMA_ID = 200;
+
+        public static SFInterpolationSchema BuildSchema()
+        { 
+            SFInterpolationSchema schema = new SFInterpolationSchema();
+
+            schema.interpolators = new ICPNetInterpolator[SFInterpolationSchema.TESSELLATION_PROCESS_NET_INTERPOLATORS];
+            schema.interpolators[0] = null;
+            schema.interpolators[1] = null;
+            schema.interpolators[2] = null;
+            if (schema.interpolators[3] == null)
+                schema.interpolators[3] = new RotatingEdgeSurfaceTriangleInterpolator();
+            if (schema.interpolators[4] == null)
+                schema.interpolators[4] = new RotatingEdgeSurfaceQuadInterpolation();
+            for (int i = 5; i < SFInterpolationSchema.TESSELLATION_PROCESS_NET_INTERPOLATORS; i++)
+            {
+                if (schema.interpolators[i] == null)
+                    schema.interpolators[i] = new NGonInterpolation(i);
+
+            }
+            return schema;
+        }
+    }
+}
